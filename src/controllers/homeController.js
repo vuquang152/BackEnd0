@@ -1,5 +1,5 @@
 const connection = require('../config/database')
-const { getAllUsers } = require('../services/CRUDService')
+const { getAllUsers, getUserById, updateUserById, deleteUserById } = require('../services/CRUDService')
 
 const getHomepage = async (req, res) => {
     let results = await getAllUsers();
@@ -18,8 +18,10 @@ const getCreatePage = (req, res) => {
     res.render('create.ejs')
 }
 
-const getUpdatePage = (req, res) => {
-    res.render('edit.ejs')
+const getUpdatePage = async (req, res) => {
+    const userId = req.params.id;
+    let user = await getUserById(userId);
+    res.render('edit.ejs', {userEdit: user})
 }
 
 const postCreateUser = async (req, res) => {
@@ -27,25 +29,38 @@ const postCreateUser = async (req, res) => {
     let name = req.body.name;
     let city = req.body.city;
     
-    console.log('>>> email: ', email,' name: ', name,' city: ', city)
-
     let [results, fields] = await connection.query(
         `INSERT INTO Users (email, name, city) 
         VALUES (?, ?, ?)`, 
         [email, name, city], 
     );
 
-    console.log('>>> results: ', results)
-    res.send('created new user succeeded');
+    res.send('Created new user succeeded');
+}
 
-    // connection.query(
-    //     'select * from Users u',
-    //     function (err, results, fields) {
-    //         console.log(">>> result = ", results)
-    //     }
-    // )
+const postUpdateUser = async (req, res) => {
+    let email = req.body.email;
+    let name = req.body.name;
+    let city = req.body.city;
+    let userId = req.body.userId;
+    
+    await updateUserById(email, city, name, userId)
 
-    // const [results, fields] = await connection.query('select * from Users u ')
+    res.redirect('/');
+}
+
+const postDeleteUser = async (req, res) => {
+    const userId = req.params.id;
+    let user = await getUserById(userId);
+    res.render('delete.ejs', { userEdit: user})
+}
+
+const postHandleRemoveUser = async (req, res) => {
+    const id = req.body.userId;
+
+    await deleteUserById(id);
+
+    res.redirect('/');
 }
 
 module.exports = { 
@@ -54,5 +69,8 @@ module.exports = {
     getHoiDanIT,
     getCreatePage,
     getUpdatePage,
-    postCreateUser
+    postCreateUser,
+    postUpdateUser,
+    postDeleteUser,
+    postHandleRemoveUser
 };
