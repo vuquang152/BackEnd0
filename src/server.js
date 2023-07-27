@@ -10,18 +10,27 @@ const port = process.env.PORT || 8888
 const hostname = process.env.HOST || 'localhost'
 
 // config req.body
-app.use(express.json()) //for json
-app.use(express.urlencoded({ extended: true })) //for form data
+app.use(express.json()); //for json
+app.use(express.urlencoded({ extended: true })) ;//for form data
 
 // config template engine
-configViewEngine(app)
+configViewEngine(app);
 
 // config static folder
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/', webRoutes)
 
+// test connection 
+;( async () => {
+    try {
+        await connection();
+        app.listen(port,hostname, () => {
+            console.log(`Example app listening on port ${port}`)
+        })
+    } catch (err) {
+        console.log(`Error connecting: `,err)
+    }
+})()
 
-app.listen(port,hostname, () => {
-    console.log(`Example app listening on port ${port}`)
-})
+
