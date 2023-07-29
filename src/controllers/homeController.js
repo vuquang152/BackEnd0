@@ -30,14 +30,12 @@ const postCreateUser = async (req, res) => {
     let email = req.body.email;
     let name = req.body.name;
     let city = req.body.city;
-
     await User.create({
         email: email, 
         name: name, 
         city: city
     })
 
-    res.send('Created new user succeeded');
     res.redirect('/');
 }
 
@@ -46,9 +44,8 @@ const postUpdateUser = async (req, res) => {
     let name = req.body.name;
     let city = req.body.city;
     let userId = req.body.userId;
-    
-    await User.updateOne({_id: userId}, {name: name, email: email, city: city});
 
+    await User.updateOne({_id: userId}, {name: name, email: email, city: city});
     res.redirect('/');
 }
 
@@ -60,10 +57,8 @@ const postDeleteUser = async (req, res) => {
 
 const postHandleRemoveUser = async (req, res) => {
     const id = req.body.userId;
-
     // await deleteUserById(id);
-    await User.deleteOne({_id: id});
-
+    let result = await User.deleteOne({_id: id});
     res.redirect('/');
 }
 
