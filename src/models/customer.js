@@ -10,7 +10,6 @@ const customerSchema = new mongoose.Schema(
         address: String,
         phone: Number,
         email: String,
-        city: String,
         image: String,
         description: String,
     }, 
@@ -18,7 +17,7 @@ const customerSchema = new mongoose.Schema(
 );
 
 
-const Customer = mongoose.model('user', customerSchema);
+const Customer = mongoose.model('Customer', customerSchema);
 
 
 module.exports = Customer;
