@@ -1,7 +1,37 @@
+import getConnection from 'config/db';
 
-const handleCreateUser = (name: string, email: string, address: string) => {
-    console.log('handleCreateUser', name, email, address);
+const handleCreateUser = async (
+  name: string,
+  email: string,
+  address: string
+) => {
+  const connection = await getConnection();
+  try {
+    const sql = 'INSERT INTO `users`(`name`, `email`,`address`) VALUES (?,?,?)';
+    const values = [name, email, address];
 
-}
+    const [result, fields] = await connection.execute(sql, values);
 
-export {handleCreateUser}
+    return result;
+  } catch (error) {
+    console.log(error);
+    throw new Error('Error creating user');
+  } finally {
+    // connection.release();
+  }
+};
+
+const getAllUsers = async () => {
+  const connection = await getConnection();
+  try {
+    const [results, fields] = await connection.query('SELECT * FROM users');
+    return results;
+  } catch (error) {
+    console.log(error);
+    throw new Error('Error getting users');
+  } finally {
+    // connection.release();
+  }
+};
+
+export { handleCreateUser, getAllUsers };

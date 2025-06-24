@@ -1,24 +1,24 @@
-import express from "express";
+import express from 'express';
 import 'dotenv/config';
-import webRoutes from "./routes/web";
+import webRoutes from 'routes/web';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
 
 // config view engine
-app.set('view engine', 'ejs')
-app.set('views', __dirname + '/views')
+app.set('view engine', 'ejs');
+app.set('views', __dirname + '/views');
 
 // config request.body
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // config static
-app.use(express.static('public'))
+app.use(express.static('public'));
 
 // config route
 webRoutes(app);
 
 app.listen(PORT, () => {
-    console.log(`Running on port1: ${PORT}`);
-})
+  console.log(`Running on port1: ${PORT}`);
+});
